@@ -10,7 +10,7 @@ output_file="FP_SNPs_10k_GB38_twoAllelsFormat.tsv"
 awk -F'\t' 'BEGIN {OFS="\t"} { $3=""; print $0 }' "$input_file" | sed 's/\t\t/\t/' > temp1.tsv
 
 \# 2. Меняем порядок колонок и сохраняем результат
-awk -F'\t' 'BEGIN {OFS="\t"} { print $2, $4, $1, $5, $6 }' temp1.tsv > temp2.tsv
+awk -F'\t' 'BEGIN {OFS="\t"} { print $2, $3, $1, $4, $5 }' temp1.tsv > temp2.tsv
 
 \# 3. Переименовываем колонки, а также добавляем "chr" к значениям chromosome и "rs" к значениям rs#
 awk -F'\t' 'BEGIN {OFS="\t"; print "CHROM", "POS", "ID", "allele1", "allele2"} 
