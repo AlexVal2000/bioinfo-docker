@@ -19,9 +19,12 @@ logging.basicConfig(
 def timestamp():
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
+# Путь к директории с файлами референсного генома
+REF_GENOME_DIR = '/ref/GRCh38.d1.vd1_mainChr/sepChrs/'
+
 # Функция для получения референсного аллеля по хромосоме и позиции
-def get_ref_allele(chrom, pos, ref_genome_dir):
-    fasta_file = os.path.join(ref_genome_dir, f'{chrom}.fa')
+def get_ref_allele(chrom, pos):
+    fasta_file = os.path.join(REF_GENOME_DIR, f'{chrom}.fa')
     
     # Проверяем существование файла
     if not os.path.exists(fasta_file):
@@ -41,7 +44,7 @@ def get_ref_allele(chrom, pos, ref_genome_dir):
     return ref_allele
 
 # Основная функция для обработки файла
-def process_file(input_file, output_file, ref_genome_dir):
+def process_file(input_file, output_file):
     try:
         with open(input_file, 'r') as infile:
             # Определяем формат конца строки
@@ -68,7 +71,7 @@ def process_file(input_file, output_file, ref_genome_dir):
                     allele2 = row['allele2']
                     
                     # Получаем референсный аллель
-                    ref_allele = get_ref_allele(chrom, pos, ref_genome_dir)
+                    ref_allele = get_ref_allele(chrom, pos)
                     if ref_allele is None:
                         logging.error(f"Не удалось получить референсный аллель для {chrom}:{pos}")
                         continue
@@ -98,7 +101,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Скрипт для обработки файла SNPs и добавления референсных аллелей.")
     parser.add_argument('-i', '--input', required=True, help="Путь к входному файлу")
     parser.add_argument('-o', '--output', required=True, help="Путь к выходному файлу")
-    parser.add_argument('-r', '--ref-dir', required=True, help="Директория с файлами референсного генома")
     
     return parser.parse_args()
 
@@ -109,7 +111,6 @@ if __name__ == '__main__':
     logging.info("Запуск скрипта...")
     logging.info(f"Входной файл: {args.input}")
     logging.info(f"Выходной файл: {args.output}")
-    logging.info(f"Директория с референсным геномом: {args.ref_dir}")
     
-    process_file(args.input, args.output, args.ref_dir)
+    process_file(args.input, args.output)
     logging.info("Скрипт завершён.")
