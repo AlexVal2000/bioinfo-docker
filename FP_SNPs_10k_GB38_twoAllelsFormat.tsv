@@ -1,4 +1,4 @@
-CHROM	POS	ID	allele1	allele2
+#CHROM	POS	ID	allele1	allele2
 chr1	1220751	rs2887286	C	T
 chr1	1275912	rs6685064	T	C
 chr1	2352457	rs2840528	A	G
