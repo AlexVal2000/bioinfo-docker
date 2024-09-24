@@ -20,8 +20,7 @@ def timestamp():
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
 # Путь к директории с файлами референсного генома
-REF_GENOME_DIR = '/home/alexandra/word/bioinfo-docker/Genom'
-#REF_GENOME_DIR = '/ref/GRCh38.d1.vd1_mainChr/sepChrs/'
+REF_GENOME_DIR = '/ref/GRCh38.d1.vd1_mainChr/sepChrs/'
 
 # Функция для получения референсного аллеля по хромосоме и позиции
 def get_ref_allele(chrom, pos):
