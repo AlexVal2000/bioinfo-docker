@@ -13,7 +13,7 @@ awk -F'\t' 'BEGIN {OFS="\t"} { $3=""; print $0 }' "$input_file" | sed 's/\t\t/\t
 awk -F'\t' 'BEGIN {OFS="\t"} { print $2, $3, $1, $4, $5 }' temp1.tsv > temp2.tsv
 
 \# 3. Переименовываем колонки, а также добавляем "chr" к значениям chromosome и "rs" к значениям rs#
-awk -F'\t' 'BEGIN {OFS="\t"; print "CHROM", "POS", "ID", "allele1", "allele2"} 
+awk -F'\t' 'BEGIN {OFS="\t"; print "#CHROM", "POS", "ID", "allele1", "allele2"} 
      NR>1 { $1="chr"$1; $3="rs"$3; print $1, $2, $3, $4, $5 }' temp2.tsv > temp3.tsv
 
 \# 4. Удаляем строки, где CHROM имеет значение "23" (Х-хромосома)
