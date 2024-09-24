@@ -20,7 +20,8 @@ def timestamp():
     return time.strftime('%Y-%m-%d %H:%M:%S')
 
 # Путь к директории с файлами референсного генома
-REF_GENOME_DIR = '/ref/GRCh38.d1.vd1_mainChr/sepChrs/'
+REF_GENOME_DIR = '/home/alexandra/word/bioinfo-docker/Genom'
+#REF_GENOME_DIR = '/ref/GRCh38.d1.vd1_mainChr/sepChrs/'
 
 # Функция для получения референсного аллеля по хромосоме и позиции
 def get_ref_allele(chrom, pos):
@@ -57,7 +58,7 @@ def process_file(input_file, output_file):
             
             # Открываем выходной файл для записи
             with open(output_file, 'w', newline='') as outfile:
-                fieldnames = reader.fieldnames + ['REF', 'ALT']
+                fieldnames = [field for field in reader.fieldnames if field not in ['allele1', 'allele2']] + ['REF', 'ALT']
                 writer = csv.DictWriter(outfile, fieldnames=fieldnames, delimiter='\t')
                 
                 # Записываем заголовки
@@ -65,7 +66,7 @@ def process_file(input_file, output_file):
                 
                 # Обрабатываем каждую строку входного файла
                 for row in reader:
-                    chrom = row['CHROM']
+                    chrom = row['#CHROM']
                     pos = int(row['POS'])
                     allele1 = row['allele1']
                     allele2 = row['allele2']
@@ -78,14 +79,16 @@ def process_file(input_file, output_file):
                     
                     # Определяем, какой из аллелей референсный
                     if ref_allele == allele1:
-                        row['REF'] = 'allele1'
-                        row['ALT'] = 'allele2'
+                        row['REF'] = allele1
+                        row['ALT'] = allele2
                     elif ref_allele == allele2:
-                        row['REF'] = 'allele2'
-                        row['ALT'] = 'allele1'
+                        row['REF'] = allele2
+                        row['ALT'] = allele1
                     else:
                         row['REF'] = 'unknown'
                         row['ALT'] = 'unknown'
+                    
+                    row = {key: row[key] for key in fieldnames}  # Удаление allele1, allele2                    
                     
                     writer.writerow(row)
                 logging.info(f"Обработка завершена. Результат записан в файл {output_file}")
